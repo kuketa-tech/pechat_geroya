@@ -1,0 +1,169 @@
+/* ==========================================================================
+   Виртуальная клавиатура и руки
+   ========================================================================== */
+
+.kb-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: center;
+  gap: 26px;
+}
+.kb-wrap.is-heatmap { grid-template-columns: minmax(0, 1fr); }
+
+.kb {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 var(--highlight), var(--shadow);
+  user-select: none;
+}
+.kb-row {
+  display: grid;
+  grid-template-columns: repeat(60, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.f-lp { --fc: var(--f-pinky); }
+.f-lr { --fc: var(--f-ring); }
+.f-lm { --fc: var(--f-middle); }
+.f-li { --fc: var(--f-index-l); }
+.f-th { --fc: var(--f-thumb); }
+.f-ri { --fc: var(--f-index-r); }
+.f-rm { --fc: var(--f-middle); }
+.f-rr { --fc: var(--f-ring); }
+.f-rp { --fc: var(--f-pinky); }
+
+.key {
+  position: relative;
+  height: clamp(30px, 6.1cqw, 46px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: linear-gradient(180deg, var(--key-top), var(--key-bg));
+  border: 1px solid var(--border);
+  border-bottom: 3px solid var(--key-edge);
+  color: var(--key-text);
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.75cqw, 14px);
+  font-weight: 500;
+  transition: background 140ms, color 140ms, border-color 140ms, transform 90ms var(--ease-out), box-shadow 160ms;
+}
+/* полоска зоны пальца */
+.key::after {
+  content: '';
+  position: absolute;
+  left: 32%;
+  right: 32%;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--fc);
+  opacity: .5;
+}
+.key.is-special { font-family: var(--font-ui); font-size: clamp(9px, 1.4cqw, 12px); font-weight: 700; color: var(--text-3); }
+.key.is-special::after { opacity: .22; }
+.key.is-dual { flex-direction: column; gap: 0; line-height: 1.05; }
+.key-alt { font-size: .76em; color: var(--text-4); }
+.key-label { white-space: nowrap; }
+.key.is-home { color: var(--text-2); }
+.key.is-bump .key-main::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 10px;
+  height: 2px;
+  margin-left: -5px;
+  border-radius: 2px;
+  background: var(--text-3);
+}
+.key.is-space::after { left: 44%; right: 44%; }
+
+.key.is-next {
+  color: var(--text);
+  background: color-mix(in srgb, var(--fc) 22%, var(--key-bg));
+  border-color: var(--fc);
+  border-bottom-color: color-mix(in srgb, var(--fc) 70%, #000);
+  box-shadow: 0 0 0 1px var(--fc), 0 0 24px -4px var(--fc);
+  transform: translateY(-1px);
+  z-index: 1;
+}
+.key.is-next::after { opacity: 1; }
+.key.is-next.is-shift { background: color-mix(in srgb, var(--fc) 14%, var(--key-bg)); }
+.key.is-press { transform: translateY(2px); border-bottom-width: 1px; background: color-mix(in srgb, var(--ok) 20%, var(--key-bg)); }
+.key.is-wrong {
+  color: #fff;
+  background: var(--err);
+  border-color: var(--err);
+  border-bottom-color: color-mix(in srgb, var(--err) 60%, #000);
+  box-shadow: 0 0 24px -4px var(--err);
+  animation: key-wrong 300ms ease-out;
+}
+@keyframes key-wrong { 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+
+/* Тепловая карта ошибок */
+.is-heatmap .key::after { display: none; }
+.is-heatmap .key.has-heat {
+  color: var(--text);
+  background: color-mix(in srgb, var(--err) var(--heat, 0%), var(--key-bg));
+  border-color: color-mix(in srgb, var(--err) var(--heat, 0%), var(--border));
+}
+
+/* Руки и подсказка пальца */
+.kb-hint { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.kb-hands { width: 100%; }
+.hands { width: 100%; height: auto; overflow: visible; }
+.hand-palm, .hand-f {
+  fill: var(--surface-2);
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  transition: fill 160ms, stroke 160ms, filter 200ms;
+}
+.hand-f[data-finger="lp"], .hand-f[data-finger="rp"] { --fc: var(--f-pinky); }
+.hand-f[data-finger="lr"], .hand-f[data-finger="rr"] { --fc: var(--f-ring); }
+.hand-f[data-finger="lm"], .hand-f[data-finger="rm"] { --fc: var(--f-middle); }
+.hand-f[data-finger="li"] { --fc: var(--f-index-l); }
+.hand-f[data-finger="ri"] { --fc: var(--f-index-r); }
+.hand-f[data-finger="th"] { --fc: var(--f-thumb); }
+.hand-f { stroke: color-mix(in srgb, var(--fc) 35%, var(--border-strong)); }
+.hand-f.is-active {
+  fill: color-mix(in srgb, var(--fc) 45%, var(--surface-2));
+  stroke: var(--fc);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--fc) 70%, transparent));
+}
+
+.kb-finger {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-2);
+  text-align: center;
+}
+.kb-finger b { color: var(--text); font-weight: 800; }
+.kb-finger-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; background: currentColor; box-shadow: 0 0 10px currentColor; transition: color 160ms; }
+
+@media (max-width: 1080px) {
+  .kb-wrap { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .kb-hint { flex-direction: row; justify-content: center; }
+  .kb-hands { width: 220px; }
+}
+
+@media (max-width: 760px) {
+  .kb { padding: 8px; gap: 3px; border-radius: 14px; }
+  .kb-row { gap: 3px; }
+  .key { border-radius: 6px; border-bottom-width: 2px; }
+  .key::after { bottom: 2px; }
+  .kb-hands { display: none; }
+}

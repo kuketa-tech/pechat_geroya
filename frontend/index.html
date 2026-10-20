@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Печать героя — тренажёр слепой печати с уровнями, комбо, достижениями и таблицей лидеров.">
+  <meta name="theme-color" content="#0a0b0f">
+  <title>Печать героя</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap">
+
+  <script>
+    // Тема до первой отрисовки — без вспышки светлого фона
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('pg.settings.v1') || '{}');
+        var t = s.theme || 'dark';
+        if (t === 'system') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/trainer.css">
+  <link rel="stylesheet" href="css/keyboard.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/session.css">
+  <link rel="stylesheet" href="css/coach.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="accentGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffb23f"/>
+        <stop offset=".55" stop-color="#ff6a2b"/>
+        <stop offset="1" stop-color="#ff3d5a"/>
+      </linearGradient>
+      <linearGradient id="okGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#8ee8b6"/>
+        <stop offset="1" stop-color="#1fb57a"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="main" id="view" tabindex="-1"></main>
+    <nav class="tabbar" id="tabbar" aria-label="Навигация"></nav>
+  </div>
+
+  <canvas id="fx" class="fx-canvas" aria-hidden="true"></canvas>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <div id="modalRoot"></div>
+
+  <script src="vendor/chart.umd.min.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+/* ==========================================================================
+   AI-тренер и связанные карточки главной (рекомендация, испытание дня)
+   ========================================================================== */
+
+.coach-loading { display: flex; align-items: center; gap: 14px; justify-content: center; padding: 40px; }
+
+.recs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.rec {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  background: radial-gradient(280px 120px at 100% 0%, var(--accent-soft), transparent 70%), var(--surface);
+}
+.rec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.rec-title { font-size: 15.5px; font-weight: 800; }
+.rec-text { font-size: 13px; color: var(--text-2); flex: 1; }
+.rec-go { align-self: flex-start; margin-top: 6px; }
+
+.coach-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 18px; }
+.model-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.model-note { font-size: 13px; margin-bottom: 14px; }
+.model-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; font-size: 13px; }
+
+.risk-keys { display: flex; flex-wrap: wrap; gap: 8px; }
+.risk-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 11px;
+  background: var(--err-soft);
+  font-size: 12.5px;
+  color: var(--err);
+}
+.risk-key kbd { min-width: 28px; height: 28px; font-size: 14px; color: var(--text); background: var(--surface); }
+.risk-key small { color: var(--text-3); font-weight: 700; }
+
+.factor-legend { margin-bottom: 12px; }
+.factors { display: flex; flex-direction: column; gap: 13px; }
+.factor-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; margin-bottom: 6px; }
+.factor-top b.up { color: var(--err); }
+.factor-top b.down { color: var(--ok); }
+.factor-bar { height: 7px; border-radius: 6px; background: var(--surface-3); overflow: hidden; }
+.factor-bar i {
+  display: block;
+  height: 100%;
+  width: var(--w);
+  border-radius: inherit;
+  background: var(--accent-grad);
+  animation: grow-w 900ms var(--ease-out) both;
+}
+.factor-bar i.neg { background: var(--ok); }
+.factor-bar-global { height: 4px; margin-top: 3px; background: transparent; }
+.factor-bar-global i { background: var(--text-4); }
+@keyframes grow-w { from { width: 0; } }
+
+.collect { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.collect-num b { font-family: var(--font-display); font-size: 34px; font-weight: 700; }
+.collect-num span { margin-left: 6px; color: var(--text-3); font-weight: 700; }
+
+.forecast-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.forecast-kpis > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.forecast-kpis span { font-size: 12px; font-weight: 700; }
+.forecast-kpis b { font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 1.1; }
+.forecast-kpis small { font-size: 11.5px; color: var(--text-3); font-weight: 600; }
+.forecast-kpis .forecast-goal { border-color: var(--accent-line); background: linear-gradient(135deg, var(--accent-soft), var(--surface-2)); }
+.forecast-goal b { background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.chart-note { margin-top: 10px; font-size: 12px; }
+.chart-radar { height: 250px; }
+.chart-mid { height: 220px; }
+
+.archetype { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.archetype-icon {
+  width: 54px; height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  background: var(--accent-grad);
+  color: var(--accent-ink);
+  box-shadow: 0 12px 28px -12px var(--accent);
+}
+.archetype-icon svg { width: 26px; height: 26px; }
+.archetype-name { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+.archetype-sub { font-size: 12.5px; font-weight: 600; }
+.archetype-desc { font-size: 13px; margin-bottom: 6px; }
+
+.styles-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.styles-list li { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.styles-list .dim { margin-left: auto; font-size: 12px; }
+.style-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--accent); }
+.style-dot[data-style="sniper"] { background: var(--ok); }
+.style-dot[data-style="metronome"] { background: var(--info); }
+.style-dot[data-style="explorer"] { background: var(--rar-epic); }
+
+.how-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.how-grid b { display: block; margin-bottom: 6px; font-size: 14px; }
+.how-grid p { font-size: 13px; color: var(--text-2); }
+
+/* ---- Главная: рекомендация AI и испытание дня ---- */
+.dash-ai { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 18px; margin-top: 18px; }
+.ai-card {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 22px;
+  background: radial-gradient(400px 160px at 0% 0%, var(--accent-soft), transparent 70%), var(--surface);
+}
+.ai-card-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.ai-card-body .row { margin-top: 6px; flex-wrap: wrap; }
+.ai-orb {
+  width: 64px; height: 64px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: var(--accent-grad);
+  color: var(--accent-ink);
+  box-shadow: 0 14px 34px -12px var(--accent);
+  animation: orb 3.4s ease-in-out infinite;
+}
+.ai-orb svg { width: 30px; height: 30px; }
+@keyframes orb { 50% { transform: translateY(-3px) rotate(-4deg); } }
+.daily-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px;
+  border-color: color-mix(in srgb, var(--rar-legend) 40%, var(--border));
+  background: radial-gradient(300px 140px at 100% 0%, color-mix(in srgb, var(--rar-legend) 14%, transparent), transparent 70%), var(--surface);
+}
+.daily-card .icon-box { background: color-mix(in srgb, var(--rar-legend) 16%, transparent); color: var(--rar-legend); }
+.daily-card.is-done .icon-box { background: var(--ok-soft); color: var(--ok); }
+.daily-card .btn { align-self: flex-start; margin-top: 4px; }
+
+@media (max-width: 980px) {
+  .coach-row { grid-template-columns: minmax(0, 1fr); }
+  .how-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dash-ai { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 620px) {
+  .how-grid { grid-template-columns: minmax(0, 1fr); }
+  .ai-card { flex-direction: column; align-items: flex-start; }
+}

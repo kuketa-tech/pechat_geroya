@@ -1,0 +1,6 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+tzdata>=2024.1  # база часовых поясов для zoneinfo на Windows
+numpy>=1.26
+scikit-learn>=1.4  # модели AI-тренера: LogisticRegression, HuberRegressor, KMeans, IsolationForest (тянет scipy)
+pytest>=8.0  # тесты: python -m pytest backend/tests
